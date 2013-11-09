@@ -19,7 +19,6 @@
                      p
                      (build-path (current-directory) p))))
 
-; TODO: make it a command line tool
 ; TODO: add auto fetch on scrolling (faster)
 ; TODO: add a checkbox to enable RAW format
 
@@ -136,6 +135,8 @@
                         #:servlet-path "/"
                         #:servlet-regexp #rx""
                         #:log-file "server.log"
+                        #:listen-ip "0.0.0.0"
+                        #:launch-browser? #f
                         #:extra-files-paths
                         (list
                           (build-path "htdocs"))))
