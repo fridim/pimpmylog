@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>Pimp my Logs!</title>
+    <link rel="StyleSheet" rev="StyleSheet" href="/main.css" type="text/css" />
+    <script src="/jquery-2.0.3.min.js"></script>
+  </head>
+  
+  <body>
+    <div id="driving">
+      <p>
+        <a href="#" id="day">1 day</a>
+        | <a href="#" id="week">1 week</a>
+        | <a href="#" id="month">1 month</a>
+        | <a href="#" id="year">1 year</a> <small>(SLOW)</small>
+        | <a href="#" id="all">all</a> <small>(SLOW++)</small>
+        | search : <input type="text" id="search" />
+      </p>
+    </div>
+    <h1>#esil</h1>
+    <hr />
+    <div id="loadingDiv">
+      <img src="/spinner.gif" />
+    </div>
+    <div id="logs">
+    </div>
+    <script>
+      $("#search").change(function() {
+          $("#logs").load("/search", "q="+ $(this).val()); 
+          });
+      $("#day").click(function() {
+            $("#logs").load("/logs/day"); 
+          });
+      $("#week").click(function() {
+            $("#logs").load("/logs/week"); 
+          });
+      $("#month").click(function() {
+            $("#logs").load("/logs/month"); 
+          });
+      $("#year").click(function() {
+            $("#logs").load("/logs/year"); 
+          });
+      $("#all").click(function() {
+            $("#logs").load("/logs/all"); 
+          });
+      $(document).bind("ajaxStart.mine", function() {
+        $('#loadingDiv').show();
+      });
+
+      $(document).bind("ajaxStop.mine", function() {
+        $('#loadingDiv').hide();
+      });
+
+      $('#loadingDiv').hide();  // hide it initially
+
+      // If a link to a specific time was given, then load it
+
+      var l = $(location).attr('hash');
+      if (l) {
+        var timestamp = Date.parse(l.slice(1,11))/1000;
+        $("#logs").load("/search", "t="+ timestamp, function() {
+            $('#loadingDiv').hide();
+            window.location = l;
+            $(l).css({"background": "#DE5577", "color": "white"});
+        });
+      }
+    </script>
+  </body>
+</html>

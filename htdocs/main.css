@@ -1,0 +1,62 @@
+h1 {
+  text-shadow: 2px 2px 2px #bbb;
+  margin-bottom:5px;
+}
+
+table { border-collapse:collapse; }
+
+tr:hover {
+  background: #ddd;
+}
+
+table,th, td { border: 0px; }
+
+td {
+  vertical-align: top;
+  margin: 0 0 0 0; padding: 0 15 0 15;
+}
+
+td.date {
+  color: gray;
+  white-space: nowrap;
+  font-size: 70%;
+}
+
+td.msg {
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+tr.me td.msg {
+  font-style: italic;
+}
+
+td.nick {
+  text-align: right;
+  vertical-align:top;
+  font-size: 80%;
+}
+
+tr.action {
+  color: gray;
+  font-family: serif;
+}
+
+tr.action tr.msg {
+  font-size: 80%;
+}
+
+hr {
+  border: 0;
+  border-top: 4px dashed #eee;
+  clear: both;
+}
+
+#driving {
+  float: right;
+}
+
+#loadingDiv {
+  width: 100%;
+  text-align: center;
+}
