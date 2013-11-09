@@ -72,6 +72,7 @@
                          (r-action (in-value (regexp-match re-action line)))
                          (r-me (in-value (regexp-match re-me line)))
                          #:when (and (string>=? line (date->string from))
+                                     (string<=? line (date->string to))
                                      (or r-saying r-action r-me)
                                      (match? line)))
                         (cond (r-saying
