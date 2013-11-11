@@ -115,7 +115,7 @@
              (for*/list ((line (in-lines in))
                          #:when (and (match? line)
                                      (string>=? line from))
-                         #:break (string>? line to) 
+                         #:break (string>? line (string-append to " 23:59"))
                          (r-saying (in-value (regexp-match re-saying line)))
                          (r-action (in-value (regexp-match re-action line)))
                          (r-me (in-value (regexp-match re-me line)))
