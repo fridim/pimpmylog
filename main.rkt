@@ -34,6 +34,9 @@
       p
       (build-path (current-directory) p))))
 
+; TODO: fix tests
+; TODO: add structure for a msg
+; TODO: a new log-format support should be as simple as a procedure string -> struct msg
 ; TODO: add auto fetch on scrolling (faster)
 ; TODO: add a checkbox to enable RAW format
 
