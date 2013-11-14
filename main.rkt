@@ -46,10 +46,10 @@
 (define weechat-re-me     #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\t \\*\t(.*)")
 (define weechat-re-action #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\t(<--|--|-->)\t(.*)")
 
-(define racket-org-re-date   #px"^(\\d{4}-\\d{2}-\\d{2} \\d:\\d{2})")
-(define racket-org-re-saying #px"^(\\d{4}-\\d{2}-\\d{2} \\d:\\d{2}) ([^: ]+): (.*)")
-(define racket-org-re-me     #px"^(\\d{4}-\\d{2}-\\d{2} \\d:\\d{2}) ([^\\(: ]+) (.*)")
-(define racket-org-re-action #px"^(\\d{4}-\\d{2}-\\d{2} \\d:\\d{2})( )(\\(join\\)|\\(quit\\)|\\(nick\\)|\\(topic\\)|\\(names\\)) (.*)")
+(define racket-org-re-date   #px"^(\\d{4}-\\d{2}-\\d{2} \\d?\\d:\\d{2})")
+(define racket-org-re-saying #px"^(\\d{4}-\\d{2}-\\d{2} \\d?\\d:\\d{2}) ([^: ]+): (.*)")
+(define racket-org-re-me     #px"^(\\d{4}-\\d{2}-\\d{2} \\d?\\d:\\d{2}) ([^\\(: ]+) (.*)")
+(define racket-org-re-action #px"^(\\d{4}-\\d{2}-\\d{2} \\d?\\d:\\d{2})( )(\\(join\\)|\\(quit\\)|\\(nick\\)|\\(topic\\)|\\(names\\)) (.*)")
 
 (module+ test
          (require rackunit)
