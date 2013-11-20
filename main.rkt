@@ -200,8 +200,7 @@
 (define (index req)
   ; TODO: don't use xexpr here...
   (response/xexpr (make-cdata #f #f (let ((channel (chan-name)))
-                                      (include-template "templates/index.html")))
-                  #:headers (list (make-header #"Cache-Control" #"max-age=0"))))
+                                      (include-template "templates/index.html")))))
 
 (module+ main
          (serve/servlet start
