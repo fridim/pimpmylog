@@ -26,19 +26,20 @@
               (racket-lang-org-mode #t)]
              #:once-each
              [("-n" "--name") cn
-              "Name of the channel"
-              (chan-name cn)]
+                              "Name of the channel"
+                              (chan-name cn)]
              #:args (filename)
              filename)))
     (if (absolute-path? p)
       p
       (build-path (current-directory) p))))
 
-; TODO: fix tests
+; TODO: find a way to put command-line in module main (in a clean way) AKA fix tests
 ; TODO: add structure for a msg
 ; TODO: a new log-format support should be as simple as a procedure string -> struct msg
-; TODO: add auto fetch on scrolling (faster)
+; TODO: add ajax fetch on scrolling (faster)
 ; TODO: add a checkbox to enable RAW format
+; IDEA: support multiple files ?
 
 ; weechat regex
 (define weechat-re-date   #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})")
@@ -111,38 +112,58 @@
       (string-replace date " " "") ":" ""))
 
   (define (get-logs from-s [to-s (current-seconds)])
-    (let ((from (date->string (seconds->date from-s)))
-          (to (date->string (seconds->date to-s))))
-      `(table
-         ,@(let ((in (open-input-file log-file)))
-             (for*/list ((line (in-lines in))
-                         #:when (and (match? line)
-                                     (string>=? line from))
-                         #:break (string>? line (string-append to " 23:59"))
-                         (r-saying (in-value (regexp-match re-saying line)))
-                         (r-action (in-value (regexp-match re-action line)))
-                         (r-me (in-value (regexp-match re-me line)))
-                         #:when (or r-saying r-action r-me))
-                        (cond (r-saying
-                                (let ([date (cadr r-saying)]
-                                      [nick (caddr r-saying)]
-                                      [msg (cadddr r-saying)])
-                                  `(tr ([class "saying"] [id ,(id-date date)])
-                                       (td ([class "date"] ) (a ([href ,(string-append "/#" (id-date date))]) ,date))
-                                       (td ([class "nick"]) ,nick)
-                                       (td ([class "msg"]) ,(make-cdata #f #f (htmlize msg))))))
-                              (r-me
-                                (let ([date (cadr r-me)]
-                                      [msg (string-join (cddr r-me))])
-                                  `(tr ([class "me"] [id ,(id-date date)])
-                                       (td ([class "date"]) (a ([href ,(string-append "/#" (id-date date))]) ,date))
-                                       (td ([class "msg"] [colspan "2"]) ,(string-append "* " msg)))))
-                              (r-action
-                                (let ([date (cadr r-action)]
-                                      [msg (string-join (cddr r-action))])
-                                  `(tr ([class "action"] [id ,(id-date date)])
-                                       (td ([class "date"]) (a ([href ,(string-append "/#" (id-date date))]) ,date))
-                                       (td ([class "msg"] [colspan "2"]) ,msg))))))))))
+    (let ((cache
+            (cond
+              ((< to-s (- (current-seconds) 60))
+               ; if it's in the past, cache indefinitly
+               "31536000")
+              ((and (eq? "all" howmuch) search-str)
+               ; if it's a search on all, let's say... one day
+               (* 3600 24))
+              (else 
+                ; cache 1 hour for /logs/day
+                ; cache 7 hour for /logs/week
+                ; cache 31 hours for /logs/month
+                ; cache 15 days for /logs/year
+                (number->string (/ (- to-s from-s) 24))))))
+      (response/xexpr
+        #:code 200
+        #:headers (list (make-header
+                          #"Cache-Control"
+                          (string->bytes/utf-8
+                            (format "max-age=~a" cache))))
+        (let ((from (date->string (seconds->date from-s)))
+              (to (date->string (seconds->date to-s))))
+          `(table
+             ,@(let ((in (open-input-file log-file)))
+                 (for*/list ((line (in-lines in))
+                             #:when (and (match? line)
+                                         (string>=? line from))
+                             #:break (string>? line (string-append to " 23:59"))
+                             (r-saying (in-value (regexp-match re-saying line)))
+                             (r-action (in-value (regexp-match re-action line)))
+                             (r-me (in-value (regexp-match re-me line)))
+                             #:when (or r-saying r-action r-me))
+                            (cond (r-saying
+                                    (let ([date (cadr r-saying)]
+                                          [nick (caddr r-saying)]
+                                          [msg (cadddr r-saying)])
+                                      `(tr ([class "saying"] [id ,(id-date date)])
+                                           (td ([class "date"] ) (a ([href ,(string-append "#" (id-date date))]) ,date))
+                                           (td ([class "nick"]) ,nick)
+                                           (td ([class "msg"]) ,(make-cdata #f #f (htmlize msg))))))
+                                  (r-me
+                                    (let ([date (cadr r-me)]
+                                          [msg (string-join (cddr r-me))])
+                                      `(tr ([class "me"] [id ,(id-date date)])
+                                           (td ([class "date"]) (a ([href ,(string-append "#" (id-date date))]) ,date))
+                                           (td ([class "msg"] [colspan "2"]) ,(string-append "* " msg)))))
+                                  (r-action
+                                    (let ([date (cadr r-action)]
+                                          [msg (string-join (cddr r-action))])
+                                      `(tr ([class "action"] [id ,(id-date date)])
+                                           (td ([class "date"]) (a ([href ,(string-append "#" (id-date date))]) ,date))
+                                           (td ([class "msg"] [colspan "2"]) ,msg))))))))))))
 
   (case howmuch
     (("all") (get-logs 1))
@@ -174,11 +195,13 @@
     [("search") search-logs]))
 
 (define (start request)
-  (response/xexpr (site-dispatch request)))
+  (site-dispatch request))
 
 (define (index req)
-  (make-cdata #f #f (let ((channel (chan-name)))
-                      (include-template "templates/index.html"))))
+  ; TODO: don't use xexpr here...
+  (response/xexpr (make-cdata #f #f (let ((channel (chan-name)))
+                                      (include-template "templates/index.html")))
+                  #:headers (list (make-header #"Cache-Control" #"max-age=0"))))
 
 (module+ main
          (serve/servlet start
