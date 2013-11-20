@@ -1,9 +1,9 @@
 <html>
-  <head>
-    <title>Pimp my Logs!</title>
-    <link rel="StyleSheet" rev="StyleSheet" href="/main.css" type="text/css" />
-    <script src="/jquery-2.0.3.min.js"></script>
-  </head>
+<head>
+<title>Pimp my Logs!</title>
+<link rel="StyleSheet" rev="StyleSheet" href="main.css" type="text/css" />
+<script src="jquery-2.0.3.min.js"></script>
+</head>
   
   <body>
     <div id="driving">
@@ -16,10 +16,10 @@
         | search : <input type="text" id="search" />
       </p>
     </div>
-    <h1>@channel </h1>
+    <h1>@|channel|</h1>
     <hr />
     <div id="loadingDiv">
-      <img src="/spinner.gif" />
+      <img src="spinner.gif" />
     </div>
     <div id="logs">
     </div>
@@ -28,22 +28,22 @@
     </div>
     <script>
       $("#search").change(function() {
-          $("#logs").load("/search", "q="+ $(this).val()); 
+          $("#logs").load("search", "q="+ $(this).val()); 
           });
       $("#day").click(function() {
-            $("#logs").load("/logs/day"); 
+            $("#logs").load("logs/day"); 
           });
       $("#week").click(function() {
-            $("#logs").load("/logs/week"); 
+            $("#logs").load("logs/week"); 
           });
       $("#month").click(function() {
-            $("#logs").load("/logs/month"); 
+            $("#logs").load("logs/month"); 
           });
       $("#year").click(function() {
-            $("#logs").load("/logs/year"); 
+            $("#logs").load("logs/year"); 
           });
       $("#all").click(function() {
-            $("#logs").load("/logs/all"); 
+            $("#logs").load("logs/all"); 
           });
       $(document).bind("ajaxStart.mine", function() {
         $('#loadingDiv').show();
@@ -60,7 +60,7 @@
       var l = $(location).attr('hash');
       if (l) {
         var timestamp = Date.parse(l.slice(1,11))/1000;
-        $("#logs").load("/search", "t="+ timestamp, function() {
+        $("#logs").load("search", "t="+ timestamp, function() {
             $('#loadingDiv').hide();
             window.location = l;
             $(l).css({"background": "#DE5577", "color": "white"});
