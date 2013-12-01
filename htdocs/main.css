@@ -11,9 +11,15 @@ tr:hover {
 
 table,th, td { border: 0px; }
 
+tr.action {
+  color: gray;
+  font-family: serif;
+}
+
 td {
   vertical-align: top;
-  margin: 0 0 0 0; padding: 0 15 0 15;
+  margin: 0 0 0 0;
+  padding: 0 15 0 15;
 }
 
 td.date {
@@ -22,9 +28,10 @@ td.date {
   font-size: 70%;
 }
 
-td.msg {
+tr.saying td.msg, tr.me td.msg {
   font-family: monospace;
   white-space: pre-wrap;
+  padding-left: 5px;
 }
 
 tr.me td.msg {
@@ -32,17 +39,15 @@ tr.me td.msg {
 }
 
 td.nick {
+  font-family: serif;
+  font-size: 80%;
   text-align: right;
   vertical-align:top;
-  font-size: 80%;
+  padding-right: 5px;
+  font-weight: bold;
 }
 
-tr.action {
-  color: gray;
-  font-family: serif;
-}
-
-tr.action tr.msg {
+tr.action td.msg {
   font-size: 80%;
 }
 
