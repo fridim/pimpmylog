@@ -40,10 +40,9 @@ Features
 Contrib?
 --------
 
-* TODO: find a way to put command-line in module main (in a clean way) AKA fix tests
-* TODO: add structure for a msg
-* TODO: a new log-format support should be as simple as a procedure string -> struct msg
 * TODO: add ajax fetch on scrolling (faster)
+* TODO: add listening port as option
+* TODO: log format definitions should be in a separate forlder
 * TODO: add a checkbox to enable RAW format
 * TODO: support mobile/pad
 * IDEA: support multiple files ?
