@@ -168,6 +168,28 @@
          (check-equal? "<a href=\"http://fridim.org\">http://fridim.org</a> ."
                        (htmlize "http://fridim.org .")))
 
+(define colors (list "#000000" ; black
+                     "#004386" ; blue
+                     "#4E93D8" ; light blue
+                     "#7C0900" ; red
+                     "#534400" ; brown
+                     "#2C5E2E" ; green
+                     "#7E0091" ; purple
+                     "#A95F04" ; orange
+                     "#A9049F" ; pink
+                     "#006A5D" ; blue-green
+                     "#0C85FF" ; blue
+                     "#00C026" ; green
+                     "#8CCD00"
+                     "#7C00CD"
+                     ))
+
+(define (nickname->color nickname)
+  (let ((hashkey (modulo (+ (string-length nickname)
+                                 (apply + (map char->integer (string->list nickname))))
+                         (length colors))))
+    (list-ref colors hashkey)))
+
 (date-display-format 'iso-8601)  ; %Y-%m-%d
 
 (module+ main
@@ -219,7 +241,7 @@
                                        (cond ((eq? type 'saying)
                                               `(tr ([class "saying"] [id ,(id-date date)])
                                                    (td ([class "date"] ) (a ([href ,(string-append "#" (id-date date))]) ,date))
-                                                   (td ([class "nick"]) ,nick)
+                                                   (td ([class "nick"] [style ,(string-append "color: " (nickname->color nick))]) ,nick)
                                                    (td ([class "msg"]) ,(make-cdata #f #f (htmlize msg)))))
                                              ((eq? type 'me)
                                               `(tr ([class "me"] [id ,(id-date date)])
