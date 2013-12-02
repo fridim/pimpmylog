@@ -4,7 +4,6 @@
          web-server/templates
          web-server/dispatch
          web-server/servlet
-         racket/promise
          racket/cmdline
          racket/string
          racket/list
@@ -39,7 +38,6 @@
 ; TODO: log format definitions should be in a separate forlder
 ; TODO: add ajax fetch on scrolling (faster)
 ; TODO: add a checkbox to enable RAW format
-; TODO: add color for nicknames
 ; IDEA: support multiple files ?
 
 
@@ -181,8 +179,7 @@
                      "#0C85FF" ; blue
                      "#00C026" ; green
                      "#8CCD00"
-                     "#7C00CD"
-                     ))
+                     "#7C00CD"))
 
 (define (nickname->color nickname)
   (let ((hashkey (modulo (+ (string-length nickname)
