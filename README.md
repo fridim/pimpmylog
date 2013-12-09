@@ -19,6 +19,7 @@ Usage :
     / -w, --weechat : input file is in weechat log format
     \ -r, --racket-org : input file is in format as files on http://racket-lang.org/irc-logs/racket/
       -n <cn>, --name <cn> : Name of the channel
+      -p <p>, --port <p> : Listening port
       --help, -h : Show this help
       -- : Do not treat any remaining argument as a switch (at this level)
      /|\ Brackets indicate mutually exclusive options.
@@ -41,7 +42,6 @@ Contrib?
 --------
 
 * TODO: add ajax fetch on scrolling (faster)
-* TODO: add listening port as option
 * TODO: log format definitions should be in a separate forlder
 * TODO: add a checkbox to enable RAW format
 * TODO: support mobile/pad

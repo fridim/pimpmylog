@@ -13,6 +13,7 @@
 (define weechat-mode (make-parameter #t))
 (define racket-lang-org-mode (make-parameter #f))
 (define chan-name (make-parameter ""))
+(define port (make-parameter 8000))
 
 (module+ main
          (define log-file
@@ -28,13 +29,15 @@
                       [("-n" "--name") cn
                                        "Name of the channel"
                                        (chan-name cn)]
+                      [("-p" "--port") p
+                                       "Listening port"
+                                       (port (string->number p))]
                       #:args (filename)
                       filename)))
              (if (absolute-path? p)
                p
                (build-path (current-directory) p)))))
 
-; TODO: add listening port as option
 ; TODO: log format definitions should be in a separate forlder
 ; TODO: add ajax fetch on scrolling (faster)
 ; TODO: add a checkbox to enable RAW format
@@ -296,6 +299,7 @@
                         #:servlet-regexp #rx""
                         #:log-file "server.log"
                         #:listen-ip "0.0.0.0"
+                        #:port (port)
                         #:launch-browser? #f
                         #:extra-files-paths
                         (list
