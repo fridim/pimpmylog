@@ -45,4 +45,5 @@ Contrib?
 * TODO: log format definitions should be in a separate forlder
 * TODO: add a checkbox to enable RAW format
 * TODO: support mobile/pad
+* TODO: add a calendar to go to a specific day/week/month
 * IDEA: support multiple files ?
