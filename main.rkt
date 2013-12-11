@@ -42,6 +42,7 @@
 ; TODO: add ajax fetch on scrolling (faster)
 ; TODO: add a checkbox to enable RAW format
 ; TODO: add a calendar to go to a specific day/week/month
+; TODO: highlight searched word(s) in search result
 ; IDEA: support multiple files ?
 
 
