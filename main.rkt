@@ -42,6 +42,8 @@
                (build-path (current-directory) p)))))
 
 ; TODO: add ajax fetch on scrolling (faster)
+; TODO: add irssi log format
+; TODO: add a converter interface to go from one format to another
 ; TODO: add a checkbox to enable RAW format
 ; TODO: add a calendar to go to a specific day/week/month
 ; TODO: highlight searched word(s) in search result
