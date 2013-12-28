@@ -38,6 +38,24 @@ Features
 * a specific line in history can be shared (simply copy/paste the link to that line)
 * works fine with proxy cache (tested with [varnish](https://www.varnish-cache.org/) default conf) as it sets Cache-Control HTTP header
 
+Build
+-----
+
+Racket can pre-compile to bytecode :
+
+    raco make main.rkt
+
+or build a standalone binary :
+
+    raco exe main.rkt -o pimpmylogs
+
+Tests
+-----
+
+    raco test .
+
+See [Rackunit](http://docs.racket-lang.org/rackunit/).
+
 Contrib?
 --------
 
