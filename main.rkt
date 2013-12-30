@@ -46,7 +46,7 @@
 ; TODO: add a converter interface to go from one format to another
 ; TODO: add a checkbox to enable RAW format
 ; TODO: add a calendar to go to a specific day/week/month
-; TODO: highlight searched word(s) in search result
+; TODO: make search case-insensitive
 ; IDEA: support multiple files ?
 
 (module+ main
@@ -56,16 +56,47 @@
                  (else
                    weechat-string->message))))
 
-(define (htmlize msg)
+(define (highlight msg search-str)
+  (if search-str
+    (string-replace msg
+                    search-str
+                    (string-append "<span class=\"highlight\">"
+                                   search-str
+                                   "</span>"))
+    msg))
+
+(define (htmlize msg [search-str #f])
   (define (transform-url url)
-    (xexpr->string `(a ([href ,url]) ,url)))
-  (regexp-replace* #px"https?://[^ ]+" msg transform-url))
+    (let ((url-clean (regexp-replace* #px"<span class=\"highlight\">([^<]+)</span>" url "\\1")))
+      (string-append "<a href=\"" url-clean "\">" url "</a>")))
+
+  (let ((escaped-msg (xexpr->string `,msg)))
+    (regexp-replace* #px"https?://(?:<span |[^ ])+"
+                     (if search-str
+                       (highlight escaped-msg (xexpr->string `,search-str))
+                       escaped-msg)
+                     transform-url)))
 
 (module+ test
          (require rackunit)
 
-         (check-equal? "<a href=\"http://fridim.org\">http://fridim.org</a> ."
-                       (htmlize "http://fridim.org .")))
+         (let ((foo "Lorem Ipsum is simply dummy text of the printing and typesetting industry.")
+               (foo-h "Lorem Ipsum is simpl<span class=\"highlight\">y</span> dumm<span class=\"highlight\">y</span> text of the printing and t<span class=\"highlight\">y</span>pesetting industr<span class=\"highlight\">y</span>."))
+           (check-equal? foo-h (highlight foo "y"))
+           (check-equal? foo (highlight foo #f)))
+
+           (check-equal? (htmlize "<h1>bla</h1>")
+                         "&lt;h1&gt;bla&lt;/h1&gt;")
+           (check-equal? (htmlize "<h1>bla</h1> foo<" "foo<")
+                         "&lt;h1&gt;bla&lt;/h1&gt; <span class=\"highlight\">foo&lt;</span>")
+           (check-equal? (htmlize "foo bar http://foobar.com?a&bla" "foo")
+                         "<span class=\"highlight\">foo</span> bar <a href=\"http://foobar.com?a&amp;bla\">http://<span class=\"highlight\">foo</span>bar.com?a&amp;bla</a>")
+           (check-equal?  (htmlize "http://onfi.re?a=2&bla .")
+                          "<a href=\"http://onfi.re?a=2&amp;bla\">http://onfi.re?a=2&amp;bla</a> .")
+           (check-equal? (htmlize "http://onfi.re .")
+                         "<a href=\"http://onfi.re\">http://onfi.re</a> .")
+           (check-equal?  (htmlize "http://onfi.re http://google.com .")
+                          "<a href=\"http://onfi.re\">http://onfi.re</a> <a href=\"http://google.com\">http://google.com</a> ."))
 
 (define colors (list "#000000" ; black
                      "#004386" ; blue
@@ -84,7 +115,7 @@
 
 (define (nickname->color nickname)
   (let ((hashkey (modulo (+ (string-length nickname)
-                                 (apply + (map char->integer (string->list nickname))))
+                            (apply + (map char->integer (string->list nickname))))
                          (length colors))))
     (list-ref colors hashkey)))
 
@@ -140,7 +171,7 @@
                                               `(tr ([class "saying"] [id ,(id-date date)])
                                                    (td ([class "date"] ) (a ([href ,(string-append "#" (id-date date))]) ,date))
                                                    (td ([class "nick"] [style ,(string-append "color: " (nickname->color nick))]) ,nick)
-                                                   (td ([class "msg"]) ,(make-cdata #f #f (htmlize msg)))))
+                                                   (td ([class "msg"]) ,(make-cdata #f #f (htmlize msg search-str)))))
                                              ((eq? type 'me)
                                               `(tr ([class "me"] [id ,(id-date date)])
                                                    (td ([class "date"]) (a ([href ,(string-append "#" (id-date date))]) ,date))

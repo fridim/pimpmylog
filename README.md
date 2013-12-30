@@ -65,5 +65,5 @@ Contrib?
 * TODO: add a converter interface to go from one format to another
 * TODO: support mobile/pad
 * TODO: add a calendar to go to a specific day/week/month
-* TODO: highlight searched word(s) in search result
+* TODO: make search case-insensitive
 * IDEA: support multiple files ?

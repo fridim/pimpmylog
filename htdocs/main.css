@@ -69,3 +69,7 @@ hr {
 #footer {
   font-size: 70%;
 }
+
+span.highlight {
+  background: yellow;
+}
