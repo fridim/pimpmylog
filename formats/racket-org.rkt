@@ -39,6 +39,8 @@
          (check-true (regexp-match? racket-org-re-saying "2010-09-06 21:45 black_13: different paradigm"))
          (check-true (regexp-match? racket-org-re-action "2010-09-06 11:47 (join) adadglgmut"))
          (check-true (regexp-match? racket-org-re-me "2010-10-14 07:00 Lajla hides"))
+         (check-equal?  (racket-org-string->message "2010-05-30 00:35 (topic) -: Racket: http://racket-lang.org")
+                        (message "2010-05-30 00:35" 'action "-" "(topic) -: Racket: http://racket-lang.org"))
          (check-equal? (racket-org-string->message "2011-01-12 21:37 _p4bl0: bremner: geiser rocks")
                        (message "2011-01-12 21:37" 'saying "_p4bl0" "bremner: geiser rocks"))
          (check-equal? (racket-org-string->message "2012-05-10 00:20 (quit) kreol[Ukr]: Ping timeout: 252 seconds")
