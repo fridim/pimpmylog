@@ -28,7 +28,7 @@
     </div>
     <script>
       $("#search").change(function() {
-          $("#logs").load("search", "q="+ $(this).val()); 
+          $("#logs").load("search", "q="+ encodeURIComponent($(this).val())); 
           });
       $("#day").click(function() {
             $("#logs").load("logs/day"); 

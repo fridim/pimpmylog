@@ -126,7 +126,7 @@
 
            (define (match? line)
              (if search-str
-               (regexp-match? search-str line)
+               (regexp-match? (regexp-quote search-str) line)
                #t))
 
            (define (id-date date)
