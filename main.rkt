@@ -47,6 +47,8 @@
 ; TODO: add a checkbox to enable RAW format
 ; TODO: add a calendar to go to a specific day/week/month
 ; TODO: make search case-insensitive
+; TODO: make « 1 day » the homepage
+; TODO: validate html
 ; IDEA: support multiple files ?
 
 (module+ main

@@ -66,4 +66,17 @@ Contrib?
 * TODO: support mobile/pad
 * TODO: add a calendar to go to a specific day/week/month
 * TODO: make search case-insensitive
+* TODO: make « 1 day » the homepage
+* TODO: validate html
 * IDEA: support multiple files ?
+
+### Done
+* <del>make it a command line tool</del>
+* <del>add structure for a msg</del>
+* <del>a new log-format support should be as simple as a procedure string -> struct msg</del>
+* <del>add structure for a msg</del>
+* <del>find a way to put command-line in module main (in a clean way) AKA fix tests</del>
+* <del>add color for nicknames</del>
+* <del>add listening port as option</del>
+* <del>log format definitions should be in a separate forlder</del>
+* <del>highlight searched word(s) in search result</del>
