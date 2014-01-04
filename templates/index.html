@@ -45,6 +45,7 @@
             $("#logs").load("logs/all");
           });
       $(document).bind("ajaxStart.mine", function() {
+        window.location = '#';
         $('#loadingDiv').show();
       });
 
@@ -57,7 +58,7 @@
       // If a link to a specific time was given, then load it
 
       var l = $(location).attr('hash');
-      if (l) {
+      if (l && l.match(/^#\d\d\d\d-/)) {
         var timestamp = Date.parse(l.slice(1,11))/1000;
         $("#logs").load("search", "t="+ timestamp, function() {
             $('#loadingDiv').hide();
@@ -65,7 +66,9 @@
             $(l).css({"background": "#DE5577", "color": "white"});
         });
       } else {
-        $("#logs").load("logs/day");
+        $("#logs").load("logs/day", function() {
+          window.location = '#footer';
+        });
       }
     </script>
   </body>
