@@ -4,7 +4,7 @@
 <link rel="StyleSheet" rev="StyleSheet" href="main.css" type="text/css" />
 <script src="jquery-2.0.3.min.js"></script>
 </head>
-  
+
   <body>
     <div id="driving">
       <p>
@@ -28,22 +28,22 @@
     </div>
     <script>
       $("#search").change(function() {
-          $("#logs").load("search", "q="+ encodeURIComponent($(this).val())); 
+          $("#logs").load("search", "q="+ encodeURIComponent($(this).val()));
           });
       $("#day").click(function() {
-            $("#logs").load("logs/day"); 
+            $("#logs").load("logs/day");
           });
       $("#week").click(function() {
-            $("#logs").load("logs/week"); 
+            $("#logs").load("logs/week");
           });
       $("#month").click(function() {
-            $("#logs").load("logs/month"); 
+            $("#logs").load("logs/month");
           });
       $("#year").click(function() {
-            $("#logs").load("logs/year"); 
+            $("#logs").load("logs/year");
           });
       $("#all").click(function() {
-            $("#logs").load("logs/all"); 
+            $("#logs").load("logs/all");
           });
       $(document).bind("ajaxStart.mine", function() {
         $('#loadingDiv').show();
@@ -65,6 +65,8 @@
             window.location = l;
             $(l).css({"background": "#DE5577", "color": "white"});
         });
+      } else {
+        $("#logs").load("logs/day");
       }
     </script>
   </body>
