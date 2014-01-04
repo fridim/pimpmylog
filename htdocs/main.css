@@ -69,12 +69,9 @@ tr.action td.msg {
 
 
 #loadingDiv {
-  width: 100%;
-  text-align: center;
-  //margin-top: 64px;
-  position: fixed;
-  top: 20;
-
+  display: inline;
+  float: left;
+  margin: 10px;
 }
 
 #footer {
