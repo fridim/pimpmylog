@@ -67,6 +67,7 @@ Contrib?
 * TODO: add a calendar to go to a specific day/week/month
 * TODO: make search case-insensitive
 * TODO: validate html
+* TODO: go to last line of the day by default
 * IDEA: support multiple files ?
 
 ### Done
@@ -79,4 +80,5 @@ Contrib?
 * <del>add listening port as option</del>
 * <del>log format definitions should be in a separate forlder</del>
 * <del>highlight searched word(s) in search result</del>
-* <del>TODO: make « 1 day » the homepage</del>
+* <del>make « 1 day » the homepage</del>
+* <del>make the navigation bar sticky</del>

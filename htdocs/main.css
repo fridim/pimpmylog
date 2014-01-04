@@ -1,8 +1,4 @@
-h1 {
-  text-shadow: 2px 2px 2px #bbb;
-  margin-bottom:5px;
-}
-
+body { margin: 0; padding: 0; }
 table { border-collapse:collapse; }
 
 tr:hover {
@@ -51,23 +47,39 @@ tr.action td.msg {
   font-size: 80%;
 }
 
-hr {
-  border: 0;
-  border-top: 4px dashed #eee;
-  clear: both;
+#driving {
+  top: 0;
+  background: white;
+  position: fixed;
+  border-bottom: 4px solid #eee;
+  text-align: right;
+  width: 100%;
+  height: 60px;
 }
 
-#driving {
-  float: right;
+#driving h1 {
+  text-shadow: 2px 2px 2px #bbb;
+  margin:5px;
+  float: left;
 }
+
+#logs {
+  margin-top: 64px;
+}
+
 
 #loadingDiv {
   width: 100%;
   text-align: center;
+  //margin-top: 64px;
+  position: fixed;
+  top: 20;
+
 }
 
 #footer {
   font-size: 70%;
+  margin-left: 10px;
 }
 
 span.highlight {
