@@ -67,6 +67,7 @@ Contrib?
 * TODO: add a calendar to go to a specific day/week/month
 * TODO: make search case-insensitive
 * TODO: validate html
+* TODO: HTML5
 * IDEA: support multiple files ?
 
 ### Done
