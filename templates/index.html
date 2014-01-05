@@ -1,29 +1,33 @@
+<!doctype html>
 <html>
-<head>
-<title>Pimp my Logs!</title>
-<link rel="StyleSheet" rev="StyleSheet" href="main.css" type="text/css" />
-<script src="jquery-2.0.3.min.js"></script>
-</head>
+  <head>
+    <meta charset="utf-8">
+    <title>Pimp my Logs!</title>
+    <meta name="description" content="PimpMyLogs, minimal UI for IRC logs">
+    <meta name="author" content="Guillaume Coré (fridim)">
+    <link rel="StyleSheet" rev="StyleSheet" href="main.css" type="text/css" />
+    <script src="jquery-2.0.3.min.js"></script>
+  </head>
 
   <body>
-    <div id="driving">
+    <nav>
       <h1>@|channel|</h1>
       <div id="loadingDiv">
-        <img src="spinner.gif" />
+        <img alt="busy" src="spinner.gif" />
       </div>
-      <p>
-        <a href="#" id="day">1 day</a>
-        | <a href="#" id="week">1 week</a>
-        | <a href="#" id="month">1 month</a>
-        | <a href="#" id="year">1 year</a> <small>(SLOW)</small>
-        | <a href="#" id="all">all</a> <small>(SLOW++)</small>
-        | search : <input type="text" id="search" />
-      </p>
-    </div>
+      <ul>
+        <li><a href="#" id="day">1 day</a></li>
+        <li><span class="separator">|</span> <a href="#" id="week">1 week</a></li>
+        <li><span class="separator">|</span> <a href="#" id="month">1 month</a></li>
+        <li><span class="separator">|</span> <a href="#" id="year">1 year</a> <small>(SLOW)</small></li>
+        <li><span class="separator">|</span> <a href="#" id="all">all</a> <small>(SLOW++)</small></li>
+        <li><span class="separator">|</span> search : <input type="text" id="search" /></li>
+      </ul>
+    </nav>
     <div id="logs">
     </div>
     <div id="footer">
-      <p>PimpMyLogs, minimal UI for IRC logs - <a href="http://github.com/fridim/pimpmylogs">Source code</a></p>
+      <p>PimpMyLogs, minimal UI for IRC logs - <a href="http://github.com/fridim/pimpmylogs">Fork me!</a></p>
     </div>
     <script>
       $("#search").change(function() {
@@ -45,7 +49,7 @@
             $("#logs").load("logs/all");
           });
       $(document).bind("ajaxStart.mine", function() {
-        window.location = '#';
+        window.location = '#firstline';
         $('#loadingDiv').show();
       });
 
@@ -67,7 +71,7 @@
         });
       } else {
         $("#logs").load("logs/day", function() {
-          window.location = '#footer';
+          window.location = '#lastline';
         });
       }
     </script>

@@ -66,8 +66,6 @@ Contrib?
 * TODO: support mobile/pad
 * TODO: add a calendar to go to a specific day/week/month
 * TODO: make search case-insensitive
-* TODO: validate html
-* TODO: HTML5
 * IDEA: support multiple files ?
 
 ### Done
@@ -83,3 +81,5 @@ Contrib?
 * <del>make « 1 day » the homepage</del>
 * <del>make the navigation bar sticky</del>
 * <del>homepage: jump to bottom (lastlog)</del>
+* <del>HTML5</del>
+* <del>validate HTML and CSS</del>

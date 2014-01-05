@@ -149,6 +149,7 @@
                  (let ((from (date->string (seconds->date from-s)))
                        (to (string-append (date->string (seconds->date to-s)) " 23:59")))
                    `(table
+                      (tr ([id "firstline"]))
                       ,@(let ((in (open-input-file log-file)))
                           (for*/list ((line (in-lines in))
                                       #:when (and (match? line)
@@ -173,7 +174,8 @@
                                                   (eq? type 'info ))
                                               `(tr ([class "action"] [id ,(id-date date)])
                                                    (td ([class "date"]) (a ([href ,(string-append "#" (id-date date))]) ,date))
-                                                   (td ([class "msg"] [colspan "2"]) ,msg))))))))))))
+                                                   (td ([class "msg"] [colspan "2"]) ,msg)))))))
+                      (tr ([id "lastline"])))))))
 
            (case howmuch
              (("all") (get-logs 1))

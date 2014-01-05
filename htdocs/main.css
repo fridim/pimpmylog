@@ -15,7 +15,7 @@ tr.action {
 td {
   vertical-align: top;
   margin: 0 0 0 0;
-  padding: 0 15 0 15;
+  padding: 0 15px 0 15px;
 }
 
 td.date {
@@ -47,26 +47,49 @@ tr.action td.msg {
   font-size: 80%;
 }
 
-#driving {
-  top: 0;
-  background: white;
+#logs {
   position: fixed;
-  border-bottom: 4px solid #eee;
+  top: 64px;
+  overflow-y : auto;
+  bottom: 30px;
+}
+
+#footer {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 70%;
+  position:fixed;
+  bottom: 0px;
+  height: 30px;
+  color: gray;
+}
+
+span.highlight {
+  background: yellow;
+}
+
+nav {
   text-align: right;
+  position: fixed;
+  top: 0;
   width: 100%;
   height: 60px;
+  background: white;
+  display: block;
+  border-bottom: 4px solid #eee;
 }
 
-#driving h1 {
+nav span.separator {
+  color: #ccc;
+}
+
+nav h1 {
+  font-size: 190%;
   text-shadow: 2px 2px 2px #bbb;
-  margin:5px;
+  margin:15px;
   float: left;
 }
-
-#logs {
-  margin-top: 64px;
-}
-
 
 #loadingDiv {
   display: inline;
@@ -74,11 +97,10 @@ tr.action td.msg {
   margin: 10px;
 }
 
-#footer {
-  font-size: 70%;
-  margin-left: 10px;
-}
+nav ul { list-style: none; }
 
-span.highlight {
-  background: yellow;
+nav ul li { display: inline; }
+
+nav li a {
+  margin-right: 6px;
 }
