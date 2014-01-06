@@ -34,9 +34,13 @@ Features
 --------
 
 * handy navigation (day, week, month, ...)
-* stupid search (a grep)
+* stupid search (a grep -i)
 * a specific line in history can be shared (simply copy/paste the link to that line)
 * works fine with proxy cache (tested with [varnish](https://www.varnish-cache.org/) default conf) as it sets Cache-Control HTTP header
+* easy interface to support other log formats. Supported log formats :
+  * #racket@freenode [archives](http://racket-lang.org/irc-logs/racket/)
+  * weechat
+* HTML5
 
 Build
 -----
@@ -83,3 +87,4 @@ Contrib?
 * <del>HTML5</del>
 * <del>validate HTML and CSS</del>
 * <del>make search case-insensitive</del>
+* <del>fix color for date and nickname when row is highlighted</del>

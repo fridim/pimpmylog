@@ -68,6 +68,8 @@
             $('#loadingDiv').hide();
             window.location = l;
             $(l).css({"background": "#DE5577", "color": "white"});
+            $(l + ' a').css({"color": "white"});
+            $(l + ' td.nick').css({"color": "white"});
         });
       } else {
         $("#logs").load("logs/day", function() {
