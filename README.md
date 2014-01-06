@@ -65,7 +65,6 @@ Contrib?
 * TODO: add a converter interface to go from one format to another
 * TODO: support mobile/pad
 * TODO: add a calendar to go to a specific day/week/month
-* TODO: make search case-insensitive
 * IDEA: support multiple files ?
 
 ### Done
@@ -83,3 +82,4 @@ Contrib?
 * <del>homepage: jump to bottom (lastlog)</del>
 * <del>HTML5</del>
 * <del>validate HTML and CSS</del>
+* <del>make search case-insensitive</del>

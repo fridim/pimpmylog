@@ -50,11 +50,11 @@
 
 (define (highlight msg search-str)
   (if search-str
-    (string-replace msg
-                    search-str
-                    (string-append "<span class=\"highlight\">"
-                                   search-str
-                                   "</span>"))
+    (regexp-replace* (string-append "((?i:" (regexp-quote search-str) "))")
+                     msg
+                     (string-append "<span class=\"highlight\">"
+                                    "\\1"
+                                    "</span>"))
     msg))
 
 (define (htmlize msg [search-str #f])
@@ -79,8 +79,10 @@
 
            (check-equal? (htmlize "<h1>bla</h1>")
                          "&lt;h1&gt;bla&lt;/h1&gt;")
-           (check-equal? (htmlize "<h1>bla</h1> foo<" "foo<")
+           (check-equal? (htmlize "<h1>bla</h1> foo<" "fOo<")
                          "&lt;h1&gt;bla&lt;/h1&gt; <span class=\"highlight\">foo&lt;</span>")
+           (check-equal? (htmlize "<h1>bla</h1> fOo<" "foo<")
+                         "&lt;h1&gt;bla&lt;/h1&gt; <span class=\"highlight\">fOo&lt;</span>")
            (check-equal? (htmlize "foo bar http://foobar.com?a&bla" "foo")
                          "<span class=\"highlight\">foo</span> bar <a href=\"http://foobar.com?a&amp;bla\">http://<span class=\"highlight\">foo</span>bar.com?a&amp;bla</a>")
            (check-equal?  (htmlize "http://onfi.re?a=2&bla .")
@@ -118,7 +120,8 @@
 
            (define (match? line)
              (if search-str
-               (regexp-match? (regexp-quote search-str) line)
+               (regexp-match? (string-append "(?i:" (regexp-quote search-str) ")")
+                              line)
                #t))
 
            (define (id-date date)
@@ -190,15 +193,15 @@
              (cond ((exists-binding? 'q bindings)
                     (let ((q (extract-binding/single 'q bindings)))
                       (if (= (string-length q) 0)
-                        `(html (head) (body (p "chaine vide mec")))
+                        (response/xexpr `(p "empty string mate!"))
                         (show-logs req "all" q))))
                    ((exists-binding? 't bindings)
                     (let ((t (extract-binding/single 't bindings)))
                       (if (= (string-length t) 0)
-                        `(html (head) (body (p "chaine vide mec")))
+                        (response/xexpr `(p "empty string mate!"))
                         (show-logs req "timestamp" #f (string->number t)))))
                    (else
-                     `(html (head) (body (h1 "ERROR") (p "Maybe you should go.")))))))
+                     (response/xexpr `(div (h1 "ERROR") (p "Maybe you should go.")))))))
 
          (define-values (site-dispatch site-url)
            (dispatch-rules
