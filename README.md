@@ -1,4 +1,4 @@
-pimpmylogs
+pimpmylog
 ==========
 
 minimal UI for IRC logs
@@ -51,7 +51,7 @@ Racket can pre-compile to bytecode :
 
 or build a standalone binary :
 
-    raco exe main.rkt -o pimpmylogs
+    raco exe main.rkt -o pimpmylog
 
 Tests
 -----
