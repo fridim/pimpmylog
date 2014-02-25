@@ -1,9 +1,11 @@
 #lang racket/base
 
 (provide racket-org-string->message
-         message->racket-org-string)
+         message->racket-org-string
+         racket-org-string->date)
 
-(require "../message.rkt")
+(require "../message.rkt"
+         (only-in srfi/19 string->date))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Racket-org log format
@@ -14,6 +16,9 @@
         [nick (caddr re)]
         [msg (cadddr re)])
     (message date type nick msg)))
+
+(define (racket-org-string->date s [f "~Y-~m-~d ~H:~M"])
+  (string->date s f))
 
 (define racket-org-re-date   #px"^(\\d{4}-\\d{2}-\\d{2} \\d\\d:\\d{2})")
 (define racket-org-re-saying #px"^(\\d{4}-\\d{2}-\\d{2} \\d\\d:\\d{2}) ([^: ]+): (.*)")

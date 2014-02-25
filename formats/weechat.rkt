@@ -1,45 +1,54 @@
 #lang racket/base
 
-(require "../message.rkt"
-         racket/list)
-
 (provide weechat-string->message
-         message->weechat-string)
+         message->weechat-string
+         weechat-string->date)
+
+(require "../message.rkt"
+         racket/list
+         (only-in srfi/19 string->date))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Weechat log format
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define (weechat-string->date s [f "~Y-~m-~d ~H:~M:~S"])
+  (string->date s f))
+
 (define (list->message re type)
-  (let ([date (cadr re)]
-        [nick (caddr re)]
-        [msg (cadddr re)])
-    (message date type nick msg)))
+  (define date (second re))
+  (define nick (third re))
+  (define msg (fourth re))
+  (message date type nick msg))
 
 (define weechat-re-date   #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})")
 (define weechat-re-saying #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\t@?([^ -<][^\t]+)\t(.*)")
 (define weechat-re-me     #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\t \\*\t([^ ]+) (.*)")
 (define weechat-re-action #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\t(<--|-->)\t(([^ ]+) .*)")
 (define weechat-re-info   #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\t--()\t(.*)")
+(define weechat-re-ignore #px"^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\t\t\\[(.*)")
 
 (define (weechat-string->message line)
-  (let ((r-saying (regexp-match weechat-re-saying line)))
-    (if r-saying
-      (list->message r-saying 'saying)
-      (let ((r-action (regexp-match weechat-re-action line)))
-        (if r-action
-          (let ([date (cadr r-action)]
-                [nick (last r-action)]
-                [msg (string-append
-                        (caddr r-action) "\t"
-                        (cadddr r-action))])
-            (message date 'action nick msg))
-          (let ((r-me (regexp-match weechat-re-me line)))
-            (if r-me
-              (list->message r-me 'me)
-              (let ((r-info (regexp-match weechat-re-info line)))
-                (if r-info
-                  (list->message r-info 'info)
+  (define r-saying (regexp-match weechat-re-saying line))
+  (if r-saying
+    (list->message r-saying 'saying)
+    (let ((r-action (regexp-match weechat-re-action line)))
+      (if r-action
+        (let ([date (second r-action)]
+              [nick (last r-action)]
+              [msg (string-append
+                     (third r-action) "\t"
+                     (fourth r-action))])
+          (message date 'action nick msg))
+        (let ((r-me (regexp-match weechat-re-me line)))
+          (if r-me
+            (list->message r-me 'me)
+            (let ((r-info (regexp-match weechat-re-info line)))
+              (if r-info
+                (list->message r-info 'info)
+                (if (regexp-match weechat-re-ignore line)
+                  (message "" 'info "" "")
                   (raise (string-append "no match for line: " line)))))))))))
 
 (define (message->weechat-string m)

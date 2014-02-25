@@ -63,13 +63,15 @@ See [Rackunit](http://docs.racket-lang.org/rackunit/).
 Contrib?
 --------
 
-* TODO: add ajax fetch on scrolling (faster)
 * TODO: add a checkbox to enable RAW format
-* TODO: add more formats (irssi, ...)
+* TODO: add irssi log format
 * TODO: add a converter interface to go from one format to another
 * TODO: support mobile/pad
 * TODO: add a calendar to go to a specific day/week/month
+* TODO: add current topic next to title
+* TODO: enable multi-word search
 * IDEA: support multiple files ?
+* IDEA: add a timeline
 
 ### Done
 * <del>make it a command line tool</del>
@@ -88,3 +90,4 @@ Contrib?
 * <del>validate HTML and CSS</del>
 * <del>make search case-insensitive</del>
 * <del>fix color for date and nickname when row is highlighted</del>
+* <del>add ajax fetch on scrolling (faster)</del>

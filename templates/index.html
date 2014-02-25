@@ -7,49 +7,64 @@
     <meta name="author" content="Guillaume Coré (fridim)">
     <link rel="StyleSheet" rev="StyleSheet" href="main.css" type="text/css" />
     <script src="jquery-2.0.3.min.js"></script>
+    <script src="waypoints.min.js"></script>
+    <script src="waypoints-infinite.min.js"></script>
   </head>
 
   <body>
+    <p></p>
     <nav>
       <h1>@|channel|</h1>
       <div id="loadingDiv">
         <img alt="busy" src="spinner.gif" />
       </div>
       <ul>
-        <li><a href="#" id="day">last day</a></li>
+        <li><a href="#" id="day">today</a></li>
         <li><span class="separator">|</span> <a href="#" id="week">last week</a></li>
         <li><span class="separator">|</span> <a href="#" id="month">last month</a></li>
-        <li><span class="separator">|</span> <a href="#" id="year">last year</a> <small>(SLOW)</small></li>
-        <li><span class="separator">|</span> <a href="#" id="all">all</a> <small>(SLOW++)</small></li>
+        <li><span class="separator">|</span> <a href="#" id="year">last year</a></li>
+        <li><span class="separator">|</span> <a href="#" id="all">oldest</a></li>
         <li><span class="separator">|</span> <input placeholder="Search" type="text" id="search" /></li>
       </ul>
     </nav>
-    <div id="logs">
+
+    <div class="logs">
     </div>
+    <a href="." class="infinite-more-link"></a>
+
     <div id="footer">
       <p>PimpMyLog, minimal UI for IRC logs - <a href="http://github.com/fridim/pimpmylog">Fork me!</a></p>
     </div>
     <script>
       $("#search").change(function() {
-          $("#logs").load("search", "q="+ encodeURIComponent($(this).val()));
-          });
+        $('#logs').waypoint('disable');
+        $('div.logs').load("search", "q="+ encodeURIComponent($(this).val()));
+      });
       $("#day").click(function() {
-            $("#logs").load("logs/day");
-          });
+        $('#logs').waypoint('disable');
+        $("div.logs").load("logs/day");
+      });
       $("#week").click(function() {
-            $("#logs").load("logs/week");
-          });
+        $("div.logs").load("logs/week", function() {
+          $('#logs').waypoint('infinite');
+        });
+      });
       $("#month").click(function() {
-            $("#logs").load("logs/month");
-          });
+        $("div.logs").load("logs/month", function() {
+          $('#logs').waypoint('infinite');
+        });
+      });
       $("#year").click(function() {
-            $("#logs").load("logs/year");
-          });
+        $("div.logs").load("logs/year", function() {
+          $('#logs').waypoint('infinite');
+        });
+      });
       $("#all").click(function() {
-            $("#logs").load("logs/all");
-          });
+        $("div.logs").load("logs/all", function() {
+          $('#logs').waypoint('infinite');
+        });
+      });
       $(document).bind("ajaxStart.mine", function() {
-        window.location = '#firstline';
         $('#loadingDiv').show();
       });
 
@@ -59,20 +74,25 @@
 
       $('#loadingDiv').hide();  // hide it initially
 
-      // If a link to a specific time was given, then load it
+      /* Start page can be :
+      - home page
+      - a link to a specific date
+       */
 
+      // If a link to a specific time was given, then load it
       var l = $(location).attr('hash');
       if (l && l.match(/^#\d\d\d\d-/)) {
-        var timestamp = Date.parse(l.slice(1,11))/1000;
-        $("#logs").load("search", "t="+ timestamp, function() {
-            $('#loadingDiv').hide();
+        var from = l.slice(1,11);
+        $("div.logs").load("search", "from-literal="+ from, function() {
             window.location = l;
-            $(l).css({"background": "#DE5577", "color": "white"});
-            $(l + ' a').css({"color": "white"});
-            $(l + ' td.nick').css({"color": "white"});
+            var ll = l.replace(/a$/, '');
+            $(ll).css({"background": "#DE5577", "color": "white"});
+            $(ll + ' a').css({"color": "white"});
+            $(ll + ' td.nick').css({"color": "white"});
+            $('#logs').waypoint('infinite');
         });
       } else {
-        $("#logs").load("logs/day", function() {
+        $("div.logs").load("logs/day", function() {
           window.location = '#lastline';
         });
       }
