@@ -3,6 +3,8 @@ pimpmylog
 
 minimal UI for IRC logs
 
+![pimpmylog](http://i.imgur.com/kwabIOD.png)
+
 [Live demo](http://logs.onfi.re/racket/)
 
 This is a simple UI for IRC log. I coded my own, because:
