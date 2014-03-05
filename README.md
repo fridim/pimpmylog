@@ -3,6 +3,8 @@ pimpmylog
 
 minimal UI for IRC logs
 
+![pimpmylog](http://i.imgur.com/kwabIOD.png)
+
 [Live demo](http://logs.onfi.re/racket/)
 
 This is a simple UI for IRC log. I coded my own, because:
@@ -79,34 +81,32 @@ See [Rackunit](http://docs.racket-lang.org/rackunit/).
 Contrib?
 --------
 
-* TODO: create a package and use raco to install pimpmylog binary
-* TODO: use lang rackjure
-* TODO: add a checkbox to enable RAW format
-* TODO: add irssi log format
-* TODO: add a converter interface to translate from one format to another
-* TODO: support mobile/pad
-* TODO: add a calendar to go to a specific day/week/month
-* TODO: add current topic next to title
-* TODO: enable multi-word search
-* TODO: speed: create a map date/fileposition and use file-position
-* IDEA: support multiple files ?
-* IDEA: add a timeline
-
-### Done
-* <del>make it a command line tool</del>
-* <del>add structure for a msg</del>
-* <del>a new log-format support should be as simple as a procedure string -> struct msg</del>
-* <del>add structure for a msg</del>
-* <del>find a way to put command-line in module main (in a clean way) AKA fix tests</del>
-* <del>add color for nicknames</del>
-* <del>add listening port as option</del>
-* <del>log format definitions should be in a separate forlder</del>
-* <del>highlight searched word(s) in search result</del>
-* <del>make « 1 day » the homepage</del>
-* <del>make the navigation bar sticky</del>
-* <del>homepage: jump to bottom (lastlog)</del>
-* <del>HTML5</del>
-* <del>validate HTML and CSS</del>
-* <del>make search case-insensitive</del>
-* <del>fix color for date and nickname when row is highlighted</del>
-* <del>add ajax fetch on scrolling (faster)</del>
+[ ] create a package and use raco to install pimpmylog binary
+[ ] use lang rackjure
+[ ] add a checkbox to enable RAW format
+[ ] add irssi log format
+[ ] add a converter interface to translate from one format to another
+[ ] support mobile/pad
+[ ] add a calendar to go to a specific day/week/month
+[ ] add current topic next to title
+[ ] enable multi-word search
+[ ] speed: create a map date/fileposition and use file-position
+[ ] idea: support multiple files?
+[ ] idea: add a timeline
+[x] make it a command line tool
+[x] add structure for a msg
+[x] a new log-format support should be as simple as a procedure string -> struct msg
+[x] add structure for a msg
+[x] find a way to put command-line in module main (in a clean way) AKA fix tests
+[x] add color for nicknames
+[x] add listening port as option
+[x] log format definitions should be in a separate forlder
+[x] highlight searched word(s) in search result
+[x] make « 1 day » the homepage
+[x] make the navigation bar sticky
+[x] homepage: jump to bottom (lastlog)
+[x] HTML5
+[x] validate HTML and CSS
+[x] make search case-insensitive
+[x] fix color for date and nickname when row is highlighted
+[x] add ajax fetch on scrolling (faster)
