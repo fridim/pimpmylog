@@ -44,6 +44,7 @@ Features
 
 Install
 -------
+(Package coming soon)
 
 1. install [Racket](http://racket-lang.org)
 2. clone the repository
@@ -55,6 +56,7 @@ cd pimpmylog</pre>
 4. run the demo
    <pre>./tools/fetch_racket-lang.org.sh
 racket main.rkt -r -n '#racket' logs/racket.log</pre>
+
 
 Build
 -----
@@ -77,6 +79,7 @@ See [Rackunit](http://docs.racket-lang.org/rackunit/).
 Contrib?
 --------
 
+* TODO: create a package and use raco to install pimpmylog binary
 * TODO: use lang rackjure
 * TODO: add a checkbox to enable RAW format
 * TODO: add irssi log format
