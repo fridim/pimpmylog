@@ -1,4 +1,7 @@
 #!/bin/sh
+mkdir -p logs
+cd logs
+
 curl http://racket-lang.org/irc-logs/racket/ \
 |egrep -o 'href="[0-9]+.txt"' \
 |sed 's/href="//; s/"$//' \

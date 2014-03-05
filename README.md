@@ -42,6 +42,20 @@ Features
   * weechat
 * HTML5
 
+Install
+-------
+
+1. install [Racket](http://racket-lang.org)
+2. clone the repository
+   <pre>git clone https://github.com/fridim/pimpmylog.git
+cd pimpmylog</pre>
+3. usage
+   <pre>racket main.rkt -h</pre>
+
+4. run the demo
+   <pre>./tools/fetch_racket-lang.org.sh
+racket main.rkt -r -n '#racket' logs/racket.log</pre>
+
 Build
 -----
 
