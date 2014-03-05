@@ -63,13 +63,15 @@ See [Rackunit](http://docs.racket-lang.org/rackunit/).
 Contrib?
 --------
 
+* TODO: use lang rackjure
 * TODO: add a checkbox to enable RAW format
 * TODO: add irssi log format
-* TODO: add a converter interface to go from one format to another
+* TODO: add a converter interface to translate from one format to another
 * TODO: support mobile/pad
 * TODO: add a calendar to go to a specific day/week/month
 * TODO: add current topic next to title
 * TODO: enable multi-word search
+* TODO: speed: create a map date/fileposition and use file-position
 * IDEA: support multiple files ?
 * IDEA: add a timeline
 
