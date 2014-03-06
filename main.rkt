@@ -22,6 +22,7 @@
 (module+ main
          (define log-file
            (let ((p (command-line
+                      #:program "pimpmylog"
                       #:once-any
                       [("-w" "--weechat")
                        "input file is in weechat log format"

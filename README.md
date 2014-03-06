@@ -1,13 +1,16 @@
 pimpmylog
 ==========
 
-minimal UI for IRC logs
+minimal web UI for IRC logs
 
 ![pimpmylog](http://i.imgur.com/kwabIOD.png)
 
 [Live demo](http://logs.onfi.re/racket/)
 
-This is a simple UI for IRC log. I coded my own, because:
+Overview
+--------
+
+This is a simple viewer for IRC log. I'm coding my own, because:
 
 * I want a minimalist UI, simple and clean look
 * I want it to be simple but functional
@@ -15,8 +18,8 @@ This is a simple UI for IRC log. I coded my own, because:
 
 Usage :
 
-    racket main.rkt -h
-    main.rkt [ <option> ... ] <filename>
+    raco pimpmylog -h
+    pimpmylog [ <option> ... ] <filename>
      where <option> is one of
     / -w, --weechat : input file is in weechat log format
     \ -r, --racket-org : input file is in format as files on http://racket-lang.org/irc-logs/racket/
@@ -30,10 +33,9 @@ Usage :
 
 Example :
 
-    racket main.rkt -r -n '#racket' logs/racket-logs/racket.log
+    raco pimpmylog -r -n '#racket' logs/racket-logs/racket.log
 
-Features
---------
+### Features
 
 * handy navigation (day, week, month, ...)
 * stupid search (a grep -i)
@@ -44,32 +46,34 @@ Features
   * weechat
 * HTML5
 
-Install
--------
-(Package coming soon)
+Quick Start
+-----------
+### Install
+1. Install [Racket](http://racket-lang.org)
+2. Install pimpmylog package :
+   <pre>raco pkg install git://github.com/fridim/pimpmylog</pre>
+3. Start using it
+   <pre>raco pimpmylog -h</pre>
 
-1. install [Racket](http://racket-lang.org)
-2. clone the repository
-   <pre>git clone https://github.com/fridim/pimpmylog.git
-cd pimpmylog</pre>
-3. usage
-   <pre>racket main.rkt -h</pre>
+#### Or build from the sources
+You can produce a standalone binary :
 
-4. run the demo
-   <pre>./tools/fetch_racket-lang.org.sh
-racket main.rkt -r -n '#racket' logs/racket.log</pre>
-
-
-Build
------
-
-Racket can pre-compile to bytecode :
-
-    raco make main.rkt
-
-or build a standalone binary :
-
+    git clone https://github.com/fridim/pimpmylog.git
+    cd pimpmylog
     raco exe main.rkt -o pimpmylog
+    ./pimpmylog -h
+
+### Easy update
+Prerequisite : you installed pimpmylog via <code>raco</code>.
+
+    raco pkg update pimpmylog
+
+This will fetch the latest version from github.
+
+### Run the demo
+
+    ./tools/fetch_racket-lang.org.sh
+    raco pimpmylog -r -n '#racket' logs/racket.log
 
 Tests
 -----
@@ -81,7 +85,6 @@ See [Rackunit](http://docs.racket-lang.org/rackunit/).
 Contrib?
 --------
 
-* TODO: create a package and use raco to install pimpmylog binary
 * TODO: use lang rackjure
 * TODO: add a checkbox to enable RAW format
 * TODO: add irssi log format
@@ -112,3 +115,4 @@ Contrib?
 * <del>make search case-insensitive</del>
 * <del>fix color for date and nickname when row is highlighted</del>
 * <del>add ajax fetch on scrolling (faster)</del>
+* <del>create a package and use raco to install pimpmylog binary</del>
