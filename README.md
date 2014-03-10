@@ -51,7 +51,7 @@ Quick Start
 ### Install
 1. Install [Racket](http://racket-lang.org)
 2. Install pimpmylog package :
-   <pre>raco pkg install git://github.com/fridim/pimpmylog</pre>
+   <pre>raco pkg install --deps search-auto git://github.com/fridim/pimpmylog</pre>
 3. Start using it
    <pre>raco pimpmylog -h</pre>
 
@@ -85,7 +85,6 @@ See [Rackunit](http://docs.racket-lang.org/rackunit/).
 Contrib?
 --------
 
-* TODO: use lang rackjure
 * TODO: add a checkbox to enable RAW format
 * TODO: add irssi log format
 * TODO: add a converter interface to translate from one format to another
@@ -116,3 +115,4 @@ Contrib?
 * <del>fix color for date and nickname when row is highlighted</del>
 * <del>add ajax fetch on scrolling (faster)</del>
 * <del>create a package and use raco to install pimpmylog binary</del>
+* <del>use lang rackjure</del>

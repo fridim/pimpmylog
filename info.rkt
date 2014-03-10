@@ -5,7 +5,8 @@
 
 (define deps '("base"
                "srfi-lite-lib"
-               "web-server-lib"))
+               "web-server-lib"
+               "rackjure"))
 
 (define build-deps '("rackunit-lib"))
 

@@ -1,4 +1,4 @@
-#lang racket/base
+#lang rackjure
 
 (require web-server/servlet-env
          web-server/templates
@@ -57,17 +57,15 @@
 
 (define (highlight msg search-str)
   (if search-str
-    (regexp-replace* (string-append "((?i:" (regexp-quote search-str) "))")
+    (regexp-replace* (str "((?i:" (regexp-quote search-str) "))")
                      msg
-                     (string-append "<span class=\"highlight\">"
-                                    "\\1"
-                                    "</span>"))
+                     (str "<span class=\"highlight\">\\1</span>"))
     msg))
 
 (define (htmlize msg [search-str #f])
   (define (transform-url url)
     (let ((url-clean (regexp-replace* #px"<span class=\"highlight\">([^<]+)</span>" url "\\1")))
-      (string-append "<a href=\"" url-clean "\">" url "</a>")))
+      (str "<a href=\"" url-clean "\">" url "</a>")))
 
   (let ((escaped-msg (xexpr->string `,msg)))
     (regexp-replace* #px"https?://(?:<span |[^ ])+"
@@ -122,8 +120,9 @@
     (list-ref colors hashkey)))
 
 (define (id-date date)
-  (string-replace
-    (string-replace date " " "") ":" ""))
+  (~> date
+      (string-replace " " "")
+      (string-replace ":" "")))
 
 (define (message->row m search-str)
   (define date (message-date m))
@@ -134,32 +133,32 @@
   (cond ((eq? type 'saying)
          `(tr ([class "saying infinite-item"] [id ,d])
               (td ([class "date"] )
-                  (a ([id ,(string-append d "a")]
+                  (a ([id ,(str d "a")]
                       [class "anchor"]))
-                  (a ([href ,(string-append "#" d "a")]) ,date))
+                  (a ([href ,(str "#" d "a")]) ,date))
               (td ([class "nick"]
-                   [style ,(string-append "color: " (nickname->color nick))])
+                   [style ,(str "color: " (nickname->color nick))])
                   ,nick)
               (td ([class "msg"])
                   ,(make-cdata #f #f (htmlize msg search-str)))))
         ((eq? type 'me)
          `(tr ([class "me infinite-item"] [id ,d])
               (td ([class "date"])
-                  (a ([id ,(string-append d "a")]
+                  (a ([id ,(str d "a")]
                       [class "anchor"]))
-                  (a ([href ,(string-append "#" d "a")]) ,date))
+                  (a ([href ,(str "#" d "a")]) ,date))
               (td ([class "nick"]) "*")
               (td ([class "msg"]) ,(make-cdata #f #f
                                                (htmlize
-                                                 (string-append nick " " msg)
+                                                 (str nick " " msg)
                                                  search-str)))))
         ((or (eq? type 'action)
              (eq? type 'info ))
          `(tr ([class "action infinite-item"] [id ,d])
               (td ([class "date"])
-                  (a ([id ,(string-append d "a")]
+                  (a ([id ,(str d "a")]
                       [class "anchor"]))
-                  (a ([href ,(string-append "#" d "a")]) ,date))
+                  (a ([href ,(str "#" d "a")]) ,date))
               (td ([class "msg"] [colspan "2"]) ,msg)))))
 
 (module+ main
@@ -172,7 +171,7 @@
            (define (match? line)
              (if search-str
                (regexp-match?
-                 (string-append "(?i:" (regexp-quote search-str) ")")
+                 (str "(?i:" (regexp-quote search-str) ")")
                  line)
                #t))
 
@@ -213,8 +212,8 @@
                       (message->row (string->message line) search-str))
                   ,(if infinite?
                      `(tr (td (a ([class "infinite-more-link"]
-                                  [href ,(string-append "search?from="
-                                                        (number->string to-s))])
+                                  [href ,(str "search?from="
+                                              (number->string to-s))])
                                  "")))
                      `(tr ([id "lastline"]))))))
 
@@ -246,10 +245,9 @@
                   (show-logs req "timestamp" #f from))
                  ((exists-binding? 'from-literal bindings)
                   (define from
-                    (date->seconds
-                      (string->date
-                        (extract-binding/single 'from-literal bindings)
-                        "~Y-~m-~d")))
+                    (~> (extract-binding/single 'from-literal bindings)
+                        (string->date "~Y-~m-~d")
+                        date->seconds))
                   (show-logs req "timestamp" #f from))))
 
          (define-values (site-dispatch site-url)
