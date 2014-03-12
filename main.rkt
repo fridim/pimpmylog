@@ -185,12 +185,7 @@
                  ((and (eq? "all" howmuch) search-str)
                   ; if it's a search on all, let's say... one day
                   (* 3600 24))
-                 (else
-                   ; cache 1 hour for /logs/day
-                   ; cache 7 hour for /logs/week
-                   ; cache 31 hours for /logs/month
-                   ; cache 15 days for /logs/year
-                   (number->string (floor (/ (- to-s from-s) 24))))))
+                 (else "60"))) ; 1 min
              (define from (date->string (seconds->date from-s)
                                         "~Y-~m-~d ~H:~M:~S"))
              (define to (date->string (seconds->date to-s)

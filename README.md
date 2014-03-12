@@ -75,6 +75,56 @@ This will fetch the latest version from github.
     ./tools/fetch_racket-lang.org.sh
     raco pimpmylog -r -n '#racket' logs/racket.log
 
+## Configure a proxy
+
+### Varnish
+
+The default Varnish configuration will work ; you just have to set the right host/port for the pimpmylog instance :
+
+    backend default {
+         .host = "127.0.0.1";
+         .port = "8000";
+    }
+
+Pimpmylog sets a Cache-Control header, so caching with Varnish should work well out of the box.
+
+#### Cache-Control header
+
+> The Cache-Control general-header field is used to specify directives that MUST be obeyed by all caching mechanisms along the request/response chain. The directives specify behavior intended to prevent caches from adversely interfering with the request or response. These directives typically override the default caching algorithms. Cache directives are unidirectional in that the presence of a directive in a request does not imply that the same directive is to be given in the response.
+
+In pimpmylog the Cache-Control max-age value depends on the page visited:
+
+<table>
+<tr><th>Page</th><th>time cached</th></tr>
+<tr><td>last day</td><td>1 minute</td></tr>
+<tr><td>search results</td><td>1 day</td></tr>
+<tr><td>everything in the past (won't change)</td><td>forever</td></tr>
+</table>
+
+### Nginx
+
+    location / {
+      proxy_pass        http://localhost:8000;
+    }
+
+Nginx can act as a proxy cache, please refer to the [documentation](http://wiki.nginx.org/HttpProxyModule). Here is an example :
+
+    http {
+      proxy_cache_path  /data/nginx/cache  levels=1:2   keys_zone=pimpmylog:100m
+                        inactive=100d      max_size=1g;
+
+      server {
+        listen       80;
+        server_name  localhost;
+
+        location / {
+          proxy_pass        http://localhost:8000;
+          proxy_cache       pimpmylog;
+          add_header X-Cache $upstream_cache_status;
+        }
+      }
+    }
+
 Tests
 -----
 
