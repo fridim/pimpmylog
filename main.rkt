@@ -124,44 +124,50 @@
       (string-replace " " "")
       (string-replace ":" "")))
 
-(define (message->row m search-str)
-  (define date (message-date m))
-  (define nick (message-nick m))
-  (define type (message-type m))
-  (define msg (message-msg m))
-  (define d (id-date date))
-  (cond ((eq? type 'saying)
-         `(tr ([class "saying infinite-item"] [id ,d])
-              (td ([class "date"] )
-                  (a ([id ,(str d "a")]
-                      [class "anchor"]))
-                  (a ([href ,(str "#" d "a")]) ,date))
-              (td ([class "nick"]
-                   [style ,(str "color: " (nickname->color nick))])
-                  ,nick)
-              (td ([class "msg"])
-                  ,(make-cdata #f #f (htmlize msg search-str)))))
-        ((eq? type 'me)
-         `(tr ([class "me infinite-item"] [id ,d])
-              (td ([class "date"])
-                  (a ([id ,(str d "a")]
-                      [class "anchor"]))
-                  (a ([href ,(str "#" d "a")]) ,date))
-              (td ([class "nick"]) "*")
-              (td ([class "msg"]) ,(make-cdata #f #f
-                                               (htmlize
-                                                 (str nick " " msg)
-                                                 search-str)))))
-        ((or (eq? type 'action)
-             (eq? type 'info ))
-         `(tr ([class "action infinite-item"] [id ,d])
-              (td ([class "date"])
-                  (a ([id ,(str d "a")]
-                      [class "anchor"]))
-                  (a ([href ,(str "#" d "a")]) ,date))
-              (td ([class "msg"] [colspan "2"]) ,msg)))))
-
 (module+ main
+         (define (message->row m search-str)
+           (define date (message-date m))
+           (define nick (message-nick m))
+           (define type (message-type m))
+           (define msg (message-msg m))
+           (define d (id-date date))
+           (define ds (date->seconds (string->date date)))
+           (define update-timeline (str "$('#timeline').val(" ds ")"))
+           (define date-td
+             `(td ([class "date"] )
+                  (a ([id ,(str d "a")]
+                      [class "anchor"]))
+                  (a ([onClick ,update-timeline]
+                      [href ,(str "#" d "a")]) ,date)))
+
+           (cond ((eq? type 'saying)
+                  `(tr ([class "saying infinite-item"]
+                        [id ,d]
+                        [onMouseOver ,update-timeline])
+                       ,date-td
+                       (td ([class "nick"]
+                            [style ,(str "color: " (nickname->color nick))])
+                           ,nick)
+                       (td ([class "msg"])
+                           ,(make-cdata #f #f (htmlize msg search-str)))))
+                 ((eq? type 'me)
+                  `(tr ([class "me infinite-item"]
+                        [id ,d]
+                        [onMouseOver ,update-timeline])
+                       ,date-td
+                       (td ([class "nick"]) "*")
+                       (td ([class "msg"]) ,(make-cdata #f #f
+                                                        (htmlize
+                                                          (str nick " " msg)
+                                                          search-str)))))
+                 ((or (eq? type 'action)
+                      (eq? type 'info ))
+                  `(tr ([class "action infinite-item"]
+                        [id ,d]
+                        [onMouseOver ,update-timeline])
+                       ,date-td
+                       (td ([class "msg"] [colspan "2"]) ,msg)))))
+
          (define oldest
            (for*/first ((line (in-lines (open-input-file log-file)))
                         (d (in-value (string->date line))))
@@ -186,10 +192,9 @@
                   ; if it's a search on all, let's say... one day
                   (* 3600 24))
                  (else "60"))) ; 1 min
-             (define from (date->string (seconds->date from-s)
-                                        "~Y-~m-~d ~H:~M:~S"))
-             (define to (date->string (seconds->date to-s)
-                                      "~Y-~m-~d ~H:~M:~S"))
+             (define format-t "~Y-~m-~d ~H:~M:~S")
+             (define from (date->string (seconds->date from-s) format-t))
+             (define to (date->string (seconds->date to-s) format-t))
              (define in (open-input-file log-file))
              (response/xexpr
                #:code 200
@@ -199,7 +204,12 @@
                                    (format "max-age=~a" cache))))
                `(table
                   ([id "logs"])
-                  (tr ([id "firstline"]))
+                  (tr ([id "firstline"] [class "infinite-item"])
+                       (td ([class "script"] [colspan "3"])
+                           ,(make-cdata
+                              #f #f (str "<script>$('#timeline').val("
+                                         (number->string from-s)
+                                         ");</script>"))))
                   ,@(for/list
                       ((line (in-lines in))
                        #:when (and (match? line) (string>=? line from))
@@ -255,10 +265,12 @@
            (site-dispatch request)))
 
 
-(define (index req)
-  (define channel (chan-name))
-  ; TODO: don't use xexpr here...
-  (response/xexpr (make-cdata #f #f (include-template "templates/index.html"))))
+(module+ main
+         (define (index req)
+           (define channel (chan-name))
+           (define current-time (current-seconds))
+           ; TODO: don't use xexpr here...
+           (response/xexpr (make-cdata #f #f (include-template "templates/index.html")))))
 
 (module+ main
          (serve/servlet start

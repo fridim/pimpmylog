@@ -18,14 +18,19 @@
       <div id="loadingDiv">
         <img alt="busy" src="spinner.gif" />
       </div>
+      <div id="datecatcher"></div>
       <ul>
-        <li><a href="#" id="day">today</a></li>
-        <li><span class="separator">|</span> <a href="#" id="week">last week</a></li>
-        <li><span class="separator">|</span> <a href="#" id="month">last month</a></li>
+        <li><a href="#" id="all">oldest</a></li>
         <li><span class="separator">|</span> <a href="#" id="year">last year</a></li>
-        <li><span class="separator">|</span> <a href="#" id="all">oldest</a></li>
+        <li><span class="separator">|</span> <a href="#" id="month">last month</a></li>
+        <li><span class="separator">|</span> <a href="#" id="week">last week</a></li>
+        <li><span class="separator">|</span> <a href="#" id="day">today</a></li>
         <li><span class="separator">|</span> <input placeholder="Search" type="text" id="search" /></li>
       </ul>
+      <div class="timeline">
+        <small>timeline</small>
+        <input type="range" id="timeline" value="@|current-time|" min="@|oldest|" max="@|current-time|" />
+      </div>
     </nav>
 
     <div class="logs">
@@ -36,34 +41,64 @@
       <p>PimpMyLog, minimal UI for IRC logs - <a href="http://github.com/fridim/pimpmylog">Fork me!</a></p>
     </div>
     <script>
+
+      function formatDate(d) {
+        var m = d.getMonth() + 1;
+        return "<table><tr><td>"+ d.getFullYear() +
+          "-" + m + "-" + d.getDate() +
+          "</td></tr><tr><td><small>" + d.getHours() + ":" +
+          d.getMinutes() + ":" + d.getSeconds() + "</small></td></tr></table>";
+      }
+
+      $("#timeline").on('input', function() {
+        var d = new Date (1000 * this.value);
+        $("#datecatcher").html(
+          formatDate(d)
+        ).show();
+      });
+
+      $("#timeline").on('click', function() {
+        $("div.logs").load("search", "from="+ this.value, function() {
+          window.location = '#firstline';
+          $('#logs').waypoint('infinite');
+        });
+        $("#datecatcher").hide();
+      });
+
       $("#search").change(function() {
         $('#logs').waypoint('disable');
         $('div.logs').load("search", "q="+ encodeURIComponent($(this).val()));
       });
+
       $("#day").click(function() {
         $('#logs').waypoint('disable');
         $("div.logs").load("logs/day");
       });
+
       $("#week").click(function() {
         $("div.logs").load("logs/week", function() {
           $('#logs').waypoint('infinite');
         });
       });
+
       $("#month").click(function() {
         $("div.logs").load("logs/month", function() {
           $('#logs').waypoint('infinite');
         });
       });
+
       $("#year").click(function() {
         $("div.logs").load("logs/year", function() {
           $('#logs').waypoint('infinite');
         });
       });
+
       $("#all").click(function() {
         $("div.logs").load("logs/all", function() {
           $('#logs').waypoint('infinite');
         });
       });
+
       $(document).bind("ajaxStart.mine", function() {
         $('#loadingDiv').show();
       });

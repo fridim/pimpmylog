@@ -3,7 +3,7 @@ pimpmylog
 
 minimal web UI for IRC logs
 
-![pimpmylog](http://i.imgur.com/kwabIOD.png)
+![pimpmylog](http://i.imgur.com/2TZqtE7.png)
 
 [Live demo](http://logs.onfi.re/racket/)
 
@@ -38,6 +38,7 @@ Example :
 ### Features
 
 * handy navigation (day, week, month, ...)
+* timeline
 * stupid search (a grep -i)
 * a specific line in history can be shared (simply copy/paste the link to that line)
 * works fine with proxy cache (tested with [varnish](https://www.varnish-cache.org/) default conf) as it sets Cache-Control HTTP header
@@ -144,7 +145,6 @@ Contrib?
 * TODO: enable multi-word search
 * TODO: speed: create a map date/fileposition and use file-position
 * IDEA: support multiple files ?
-* IDEA: add a timeline
 
 ### Done
 * <del>make it a command line tool</del>
