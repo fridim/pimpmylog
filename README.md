@@ -145,6 +145,8 @@ TODO (contrib?)
 - [ ] enable multi-word search
 - [ ] speed: create a map date/fileposition and use file-position
 - [ ] IDEA: support multiple files ?
+- [ ] add real-time update when lastlogs are displayed
+- [ ] add a « links » panel with #tag support
 - [x] make it a command line tool
 - [x] add structure for a msg
 - [x] a new log-format support should be as simple as a procedure string -> struct msg
