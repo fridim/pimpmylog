@@ -127,6 +127,9 @@
 (module+ main
          (define (message->row m search-str)
            (define date (message-date m))
+           (cond ((= 0 (string-length date)) ; ignore those lines
+                  "")
+                 (else
            (define nick (message-nick m))
            (define type (message-type m))
            (define msg (message-msg m))
@@ -166,7 +169,7 @@
                         [id ,d]
                         [onMouseOver ,update-timeline])
                        ,date-td
-                       (td ([class "msg"] [colspan "2"]) ,msg)))))
+                       (td ([class "msg"] [colspan "2"]) ,msg)))))))
 
          (define oldest
            (for*/first ((line (in-lines (open-input-file log-file)))
