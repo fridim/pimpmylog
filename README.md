@@ -136,6 +136,8 @@ See [Rackunit](http://docs.racket-lang.org/rackunit/).
 TODO (contrib?)
 ---------------
 
+- [ ] add a previous day and next day links (« & »)
+- [ ] add a checkbox to enable/disable JOIN/LEAVE/...
 - [ ] add a checkbox to enable RAW format
 - [ ] add irssi log format
 - [ ] add a converter interface to translate from one format to another
@@ -143,10 +145,11 @@ TODO (contrib?)
 - [ ] add a calendar to go to a specific day/week/month
 - [ ] add current topic next to title
 - [ ] enable multi-word search
-- [ ] speed: create a map date/fileposition and use file-position
 - [ ] IDEA: support multiple files ?
 - [ ] add real-time update when lastlogs are displayed
 - [ ] add a « links » panel with #tag support
+- [ ] display next day when there is no log for current day
+- [x] speed: create a map date/fileposition and use file-position
 - [x] make it a command line tool
 - [x] add structure for a msg
 - [x] a new log-format support should be as simple as a procedure string -> struct msg
