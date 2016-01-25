@@ -8,7 +8,7 @@
          racket/string
          racket/list
          (only-in racket/date date->seconds)
-         (only-in srfi/19 date->string)
+         (only-in srfi/19 date->string string->date)
          xml
          "message.rkt"
          "formats/weechat.rkt"
@@ -43,7 +43,125 @@
           p
           (build-path (current-directory) p)))))
 
+; produces a hash :
+; * key : date by day
+; * value : position in the log file to pass to file-position
+(define (map-file f)
+  (let-values ([(size resulting-hash last-day)
+                (for*/fold ([bytes-count 0]
+                            [h (hash)]
+                            [previous-day #""])
+                           ([l (in-bytes-lines (open-input-file f))]
+                            [day (in-value (first (regexp-match*
+                                                   ; TODO: use a regex per format (weechat, ...)
+                                                   #px"^(\\d{4}-\\d{2}-\\d{2})"
+                                                   l)))])
+                  (values (+ 1 bytes-count (bytes-length l))
+                          (if (bytes=? previous-day day)
+                              h
+                              (hash-set h day bytes-count))
+                          day))])
+    resulting-hash))
+
+; in a list ls of possible values, find the nearest to d
+(define (nearest ls d)
+  (define (bytes->seconds b)
+    (~> b
+        bytes->string/utf-8
+        (string->date "~Y-~m-~d")
+        date->seconds))
+  (define d-seconds (bytes->seconds d))
+  (define (distance-from-d a)
+    (abs (- (bytes->seconds a)
+            d-seconds)))
+
+  (define-values (minimum-date minimum-distance)
+    (for*/fold ([current-min (first ls)]
+                [current-min-distance (distance-from-d (first ls))])
+               (; stop if the day-before or the day-after is found
+                #:break (< current-min-distance 86401)
+                [i (in-list ls)]
+                [d-i (in-value (distance-from-d i))])
+      (if (< current-min-distance d-i)
+          (values current-min current-min-distance)
+          (values i d-i))))
+  minimum-date)
+
+(define (find-nearest-key h d)
+  ; TODO: idea for better performances : reduce the list of keys by looking
+  ; only in current/previous/next months.
+  (nearest (hash-keys h) d))
+
+(module+ test
+  (require rackunit)
+
+  (check-equal?
+   (nearest (list #"2014-09-10"
+                  #"2013-08-02"
+                  #"2011-01-01"
+                  #"2010-12-24")
+            #"2010-12-29")
+   #"2011-01-01"))
+
+; adjust file-position with a date
+; - h: a hash to map dates to file-positions
+; - in: the input-port
+; - complete-date: a string of the date
+(define (jump-to h in complete-date)
+  (define key (string->bytes/utf-8 (substring complete-date 0 10)))
+  (cond ((hash-has-key? h key)
+         (file-position in (hash-ref h key)))
+        (else
+         (file-position in (hash-ref h (find-nearest-key h key))))))
+
+; look for the next day from a given day and position. It returns 2 values:
+; * the next day bytes-string
+; * the position of the next day in the file
+; if not found returns:
+; * day
+; * pos
+(define (look-for-new-day path day pos)
+  (define in (open-input-file path))
+  (file-position in pos)
+
+  (for*/fold ([last-day day]
+              [bytes-count pos])
+             ([l (in-bytes-lines in)]
+              [n (in-value (first (regexp-match*
+                                   ; TODO: use a regex per format (weechat, ...)
+                                   #px"^(\\d{4}-\\d{2}-\\d{2})"
+                                   l)))]
+              #:final (not (bytes=? n day)))
+    (values n
+            (if (bytes=? n day)
+                (if (eof-object? in)
+                    pos
+                    (+ 1 bytes-count (bytes-length l)))
+                bytes-count))))
+
 (module+ main
+  (define log-file-map (map-file log-file))
+
+  ; update log-file-map in a state-full manner
+  ; ( still use immutable hash )
+  (define (update-hash!)
+    (define last-day (last (sort (hash-keys log-file-map) bytes<?)))
+    (define last-day-pos (hash-ref log-file-map last-day))
+    (define-values (key value) (look-for-new-day log-file last-day last-day-pos))
+    (when key
+      (unless (bytes=? key last-day)
+        (set! log-file-map (hash-set log-file-map key value)))))
+
+  (define (update-hash-if-needed path)
+    (do ((evt (filesystem-change-evt path)
+              (filesystem-change-evt path)))
+        (#f)
+      (sync evt)
+      (sleep 2)
+      (update-hash!)))
+  (define worker (thread (lambda () (update-hash-if-needed log-file))))
+  (displayln "updater started")
+
   (define string->message
     (cond ((racket-lang-org-mode)
            racket-org-string->message)
@@ -75,8 +193,6 @@
                      transform-url)))
 
 (module+ test
-  (require rackunit)
-
   (let ((foo "Lorem Ipsum is simply dummy text of the printing and typesetting industry.")
         (foo-h "Lorem Ipsum is simpl<span class=\"highlight\">y</span> dumm<span class=\"highlight\">y</span> text of the printing and t<span class=\"highlight\">y</span>pesetting industr<span class=\"highlight\">y</span>."))
     (check-equal? foo-h (highlight foo "y"))
@@ -199,6 +315,7 @@
       (define from (date->string (seconds->date from-s) format-t))
       (define to (date->string (seconds->date to-s) format-t))
       (define in (open-input-file log-file))
+      (jump-to log-file-map in from)
       (response/xexpr
        #:code 200
        #:headers (list (make-header
