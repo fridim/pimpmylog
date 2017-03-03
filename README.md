@@ -5,8 +5,6 @@ minimal web UI for IRC logs
 
 ![pimpmylog](http://i.imgur.com/2TZqtE7.png)
 
-[Live demo](http://logs.onfi.re/racket/)
-
 Overview
 --------
 
